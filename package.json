@@ -1,0 +1,28 @@
+{
+  "name": "xzp-vue",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000x\u0000z\u0000p\u0000-\u0000v\u0000u\u0000e\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "serve": "rollup -c -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xzp-git/xzp-vue.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xzp-git/xzp-vue/issues"
+  },
+  "homepage": "https://github.com/xzp-git/xzp-vue#readme",
+  "devDependencies": {
+    "@babel/core": "^7.14.2",
+    "@babel/preset-env": "^7.14.2",
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^11.0.0",
+    "rollup": "^2.47.0",
+    "rollup-plugin-babel": "^4.4.0"
+  }
+}
