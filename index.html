@@ -14,12 +14,26 @@
         // viewModel 数据模型
         // 典型的MVVM view     vm       model
         const vm = new Vue({
-            el:'#app',
-            data: {
-                name: 'zf'
-            }
+            // el:'#app',
+            data() {
+                return{
+                    name: 'zf',
+                    a: {
+                        a: 1
+                    },
+                    arr:[{name:'xzp'}]
+                }
+            },
+            // render(){
+            //     return h('div', {class:'xxx'},'hrllo')
+            // }
         })
-        
+        // 用户很少通过索引操作数组arr[82] = 1000 内部就想到不对索引进行拦截，因为消耗严重，内部数组不采用defineProperty
+        // push shift pop unshift reverse sort splice 7个方法都是变异方法 就是会更改原数组 
+        vm._data.a = { b: 8 }
+        vm.arr[0].name 
+        console.log(vm);
+        vm.$mount('#app')
     </script>
 </body>
 </html> 
