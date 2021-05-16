@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    <div id="app">
-        <ul>
-            <li>
-                {{name}}
-            </li>
-        </ul>
+    <div id="app" a=1 style="color: red;background:plum;">
+        hello({{name}})8888 <span>world</span>
     </div>
     <script src="./dist/vue.js"></script>
     <script>
@@ -20,12 +18,12 @@
         const vm = new Vue({
             // el:'#app',
             data() {
-                return{
+                return {
                     name: 'zf',
                     a: {
                         a: 1
                     },
-                    arr:[{name:'xzp'}]
+                    arr: { name: 'xzp' }
                 }
             },
             // render(){
@@ -34,10 +32,15 @@
         })
         // 用户很少通过索引操作数组arr[82] = 1000 内部就想到不对索引进行拦截，因为消耗严重，内部数组不采用defineProperty
         // push shift pop unshift reverse sort splice 7个方法都是变异方法 就是会更改原数组 
-        vm._data.a = { b: 8 }
-        vm.arr[0].name 
-        console.log(vm);
+
         vm.$mount('#app')
+
+
+        setTimeout(function () {
+            vm.name = '[xzp]'
+            vm._update(vm._render())
+        }, 2000)
     </script>
 </body>
-</html> 
+
+</html>
