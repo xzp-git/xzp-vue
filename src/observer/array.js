@@ -15,7 +15,6 @@ let methods = [
 methods.forEach(method => {
     // 用户调用时如果是以上七个方法 会用我自己重写的， 否则用原来的数组方法
     arrayMethods[method] = function (...args) {
-        console.log('数组发生变化');
         oldArrayPrototype[method].call(this,...args)
         let inserted = null
         let ob = this.__ob__
