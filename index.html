@@ -9,7 +9,7 @@
 
 <body>
     <div id="app" a=1 style="color: red;background:plum;">
-        hello({{name}})8888 {{name}} {{age}}<span>world</span>
+        {{arr}}
     </div>
     <script src="./dist/vue.js"></script>
     <script>
@@ -20,7 +20,8 @@
             data() {
                 return {
                     name: 'zf',
-                    age:'25'
+                    age:'25',
+                    arr:[[1,2,3]]
                 }
             },
             // render(){
@@ -34,9 +35,21 @@
 
 
         setTimeout(function () {
-            vm.name = '[xzp]'
+            // vm.name = '[xzp]'
+            // vm.name = '[xzp111]'
+            // vm.name = '[xzp222]'
+            // vm.name = '[xzp333999]'
+            vm.arr[0].push(456)
         }, 2000)
     </script>
 </body>
 
 </html>
+
+<!-- Vue中的嵌套层次不能太深，否侧会有大量递归
+Vue中对象通过的是defineProprety实现的响应式，拦截了get和set ，如果存在的属性不会拦截
+也不会响应。可以使用$set  让对象自己去notify 或者赋予一个新对象
+
+
+Vue中的数组改索引和长度 是不会影响更新的 通过变异的方法 可以更新视图 7个方法 数组中如果是对象类型 修改对象也可以更新视图
+-->
