@@ -11,7 +11,13 @@ class Dep{ //每个属性都给他分配一个dep dep可以来存放watcher  wat
         // dep 里面要存放watcher watcher要存放dep  多对多的关系
         if (Dep.target) {
             Dep.target.addDep(this)
-        }
+        } 
+    }
+    addSub(watcher){
+        this.subs.push(watcher)
+    }
+    notify(){
+        this.subs.forEach(watcher => watcher.update())
     }
 }
 Dep.target = null

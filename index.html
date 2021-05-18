@@ -9,7 +9,7 @@
 
 <body>
     <div id="app" a=1 style="color: red;background:plum;">
-        hello({{name}})8888 <span>world</span>
+        hello({{name}})8888 {{name}} {{age}}<span>world</span>
     </div>
     <script src="./dist/vue.js"></script>
     <script>
@@ -20,10 +20,7 @@
             data() {
                 return {
                     name: 'zf',
-                    a: {
-                        a: 1
-                    },
-                    arr: { name: 'xzp' }
+                    age:'25'
                 }
             },
             // render(){
@@ -38,7 +35,6 @@
 
         setTimeout(function () {
             vm.name = '[xzp]'
-            vm._update(vm._render())
         }, 2000)
     </script>
 </body>
