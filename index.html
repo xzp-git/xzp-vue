@@ -8,8 +8,13 @@
 </head>
 
 <body>
+    <!-- 当在页面中直接写 fullName 时 fullName不会创建dep 所以收集不到 渲染watcher
+        firstName是在计算属性中使用的，所以他会收集计算属性的watcher 没有收集渲染watcher
+        计算属性中的值 应该记录 计算属性的watcher 和 渲染的watcher
+        Dep.target上赋值一个渲染watcher, 又将Dep.target设置为计算属性watcher
+    -->
     <div id="app" a=1 style="color: red;background:plum;">
-        {{arr}}
+     {{fullName}}
     </div>
     <script src="./dist/vue.js"></script>
     <script>
@@ -21,9 +26,42 @@
                 return {
                     name: 'zf',
                     age:'25',
-                    arr:[[1,2,3]]
+                    obj:{
+                        foo:11
+                    },
+                    arr:[[1,2,3]],
+                    firstName:"xing",
+                    lastName:"hhhhhh"
                 }
             },
+            watch: {
+                name(newValue, oldValue){
+                    console.log(newValue, oldValue);
+                },
+                age:[
+                    function (newValue, oldValue) {
+                        console.log(newValue, oldValue);
+                    },
+                    function (a, b) {
+                        console.log(a, b);
+                    },
+
+                ],
+                'obj.foo'(newValue, oldValue){
+                    console.log(newValue, oldValue)
+                }
+            },
+            computed:{
+                fullName:{
+                    get(){
+                        console.log("oooo");
+                        return this.firstName + "555"
+                    },
+                    set(newValue){
+                        console.log(newValue);
+                    }
+                }
+            }
             // render(){
             //     return h('div', {class:'xxx'},'hrllo')
             // }
@@ -39,8 +77,14 @@
             // vm.name = '[xzp111]'
             // vm.name = '[xzp222]'
             // vm.name = '[xzp333999]'
-            vm.arr[0].push(456)
+            // vm.arr[0].push(456)
+            vm.firstName = "lxxx"
         }, 2000)
+        // 1.计算属性默认不执行 =》 Object.defineproperty => getter
+        // 多次取值如果依赖的值不变化 就不会重新执行 vm.fullname  
+        // 依赖的值变化 需要重新执行
+
+        // dirty 表示这个值是不是脏的 true   (取值后变为false)， 依赖的值变化 dirty => true
     </script>
 </body>
 
@@ -49,7 +93,4 @@
 <!-- Vue中的嵌套层次不能太深，否侧会有大量递归
 Vue中对象通过的是defineProprety实现的响应式，拦截了get和set ，如果存在的属性不会拦截
 也不会响应。可以使用$set  让对象自己去notify 或者赋予一个新对象
-
-
-Vue中的数组改索引和长度 是不会影响更新的 通过变异的方法 可以更新视图 7个方法 数组中如果是对象类型 修改对象也可以更新视图
--->
+Vue中的数组改索引和长度 是不会影响更新的 通过变异的方法 可以更新视图 7个方法 数组中如果是对象类型 修改对象也可以更新视图-->

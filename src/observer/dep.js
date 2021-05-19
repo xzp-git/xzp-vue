@@ -21,14 +21,16 @@ class Dep{ //每个属性都给他分配一个dep dep可以来存放watcher  wat
     }
 }
 Dep.target = null
-
+let stack = []
 export function pushTarget(watcher) {
-    Dep.target = watcher
+    Dep.target = watcher  
+    stack.push(watcher)
 }
 
 
 export function popTarget() {
-    Dep.target = null
+    stack.pop()
+    Dep.target = stack[stack.length-1]
 }
 
 
