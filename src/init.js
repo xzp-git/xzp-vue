@@ -11,7 +11,7 @@ export function initMixin(Vue){ //表示在vue的基础上做一次混合操作
     callHook(vm, "beforeCreate")
     // 对数据进行初始化  watch computed props data...
     initState(vm) //数据劫持
-
+    callHook(vm, "created")
     if (vm.$options.el) {
       // 将数据挂载到这个模板上
       vm.$mount(vm.$options.el )
