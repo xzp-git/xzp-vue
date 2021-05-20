@@ -18,6 +18,16 @@
     </div>
     <script src="./dist/vue.js"></script>
     <script>
+        Vue.mixin({
+            beforeCreate(){
+                console.log("beforeCreate111");
+            }
+        })
+        Vue.mixin({
+            beforeCreate(){
+                console.log("beforeCreate222");
+            }
+        })
         // viewModel 数据模型
         // 典型的MVVM view     vm       model
         const vm = new Vue({
@@ -54,7 +64,6 @@
             computed:{
                 fullName:{
                     get(){
-                        console.log("oooo");
                         return this.firstName + "555"
                     },
                     set(newValue){
