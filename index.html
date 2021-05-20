@@ -44,6 +44,9 @@
                     lastName:"hhhhhh"
                 }
             },
+            beforeCreate(){
+                console.log("beforeCreate222");
+            },
             watch: {
                 name(newValue, oldValue){
                     console.log(newValue, oldValue);

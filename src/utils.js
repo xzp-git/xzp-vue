@@ -7,7 +7,7 @@ export function isObject(val) {
 
 
 const callbacks = []
-function flushCallbacks(params) {
+function flushCallbacks() {
     callbacks.forEach(cb => cb())
     waiting = false
 }
@@ -51,4 +51,63 @@ export function nextTick(cb) {
         timer(flushCallbacks)  //vue2 中 考虑了兼容性问题  vue3里面考虑了兼容性
         waiting = true
     }
+}
+let lifeCycleHooks = [
+    'beforeCreate',
+    'created',
+    'beforeMount',
+    'mounted',
+    'beforeUpdate',
+    'updated',
+    'beforeDestroy',
+    'destroyed'
+]
+let strats = {} //存放各种策略
+function mergeHook(parentVal, childVal) {
+    if (childVal) {
+        if (parentVal) {
+            return parentVal.concat(childVal)
+        }else{
+            return [childVal]
+        }
+    }else{
+        return parentVal
+    }
+}
+lifeCycleHooks.forEach(hook => {
+    strats[hook] = mergeHook
+})
+
+// {a:1} {b:2}
+export function mergeOptions(parent, child) {
+    const options = {}  //合并后的结果
+
+    for (const key in parent) {
+        mergeField(key)
+    }
+
+    for (const key in child) {
+        if (parent.hasOwnProperty(key)) {
+            continue
+        }
+        mergeField(key)
+    }
+
+    function mergeField(key) {
+        let parentVal = parent[key]
+
+        let childVal = child[key]
+
+        // 策略模式
+        if (strats[key]) { //如果有对应的策略就调用对应的策略即可
+            options[key] = strats[key](parentVal, childVal)
+        }else{
+            if (isObject(parentVal) && isObject(childVal)) {
+                options[key] = {...parentVal, ...childVal}
+            }else{
+                options[key] = child[key]
+            }
+        }
+    }
+    return options
 }
