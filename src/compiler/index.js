@@ -19,3 +19,4 @@ export function compileToFunction(template) {
 // with(obj){
 //     console.log(a);  // 1  
 // }
+

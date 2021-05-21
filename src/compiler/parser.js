@@ -8,52 +8,53 @@ const startTagClose = /^\s*(\/?)>/; //   >  />   <div/>
 const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g; // {{aaaaa}}
 // 将解析的结果组装成一个树结构  栈
 
-function createAstElement(tagName, attrs) {
-    return {
-        tag: tagName,
-        type: 1,
-        children: [],
-        parent: null,
-        attrs
-    }
-}
-let root = null
-let stack = []
-function start(tagName, attributes) {
-    let parent = stack[stack.length - 1]
-    let element = createAstElement(tagName, attributes)
-    if (!root) {
-        root = element
-    }
-    if (parent) {
-        element.parent = parent
-        parent.children.push(element)
-    }
-    stack.push(element)
-}
 
-
-function end(tagName) {
-    let last = stack.pop()
-    if (last.tag !== tagName) {
-        throw new Error('标签有误')
-    }
-}
-
-
-function chars(text) {
-    text = text.replace(/\s/g,"")
-    let parent = stack[stack.length - 1];
-    if (text) {
-        parent.children.push({
-            type: 3,
-            text
-        })
-    }
-}
 // html字符串解析成  对应的脚本来触发 tokens,  <div id="app">{{name}}</div>
 
 export function parserHTML(html) { //</div>    
+    function createAstElement(tagName, attrs) {
+        return {
+            tag: tagName,
+            type: 1,
+            children: [],
+            parent: null,
+            attrs
+        }
+    }
+    let root = null
+    let stack = []
+    function start(tagName, attributes) {
+        let parent = stack[stack.length - 1]
+        let element = createAstElement(tagName, attributes)
+        if (!root) {
+            root = element
+        }
+        if (parent) {
+            element.parent = parent
+            parent.children.push(element)
+        }
+        stack.push(element)
+    }
+    
+    
+    function end(tagName) {
+        let last = stack.pop()
+        if (last.tag !== tagName) {
+            throw new Error('标签有误')
+        }
+    }
+    
+    
+    function chars(text) {
+        text = text.replace(/\s/g,"")
+        let parent = stack[stack.length - 1];
+        if (text) {
+            parent.children.push({
+                type: 3,
+                text
+            })
+        }
+    }
     function advance(len) {
         html = html.substring(len)
     }

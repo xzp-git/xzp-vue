@@ -77,7 +77,15 @@ function mergeHook(parentVal, childVal) {
 lifeCycleHooks.forEach(hook => {
     strats[hook] = mergeHook
 })
-
+strats.components = function (parent, child) {
+    let options =  Object.create(parent) //根据父对象构造一个新对象
+    if (child) {
+        for (let key in child) {
+            options[key] = child[key]
+         }
+    } 
+    return options
+}
 // {a:1} {b:2}
 export function mergeOptions(parent, child) {
     const options = {}  //合并后的结果
@@ -105,9 +113,17 @@ export function mergeOptions(parent, child) {
             if (isObject(parentVal) && isObject(childVal)) {
                 options[key] = {...parentVal, ...childVal}
             }else{
-                options[key] = child[key]
+                // 父亲有 儿子没
+
+                options[key] = child[key] || parent[key]
             }
         }
     }
     return options
+}
+
+
+export function isReservedTag(tag){
+    let str = 'a,div,span,p,img,button,ul,li'
+    return str.includes(tag)
 }

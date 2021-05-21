@@ -28,6 +28,7 @@ export function mountComponent(vm, el) {
     new Watcher(vm, updateComponent, () => {
         console.log('更新视图了');
     }, true ) //他是一个渲染watcher 后续有其他的watcher
+    callHook(vm, "mounted")
 }
 
 export function callHook(vm, hook) {

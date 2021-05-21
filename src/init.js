@@ -1,11 +1,11 @@
-import { initState }  from "./state"
+import { initState } from "./state"
 import { compileToFunction } from "./compiler/index";
 import { mountComponent, callHook } from "./lifecycle";
 import { mergeOptions } from "./utils";
 
-export function initMixin(Vue){ //表示在vue的基础上做一次混合操作
+export function initMixin(Vue) { //表示在vue的基础上做一次混合操作
   Vue.prototype._init = function (options) {
-    
+
     const vm = this
     vm.$options = mergeOptions(vm.constructor.options, options) //后面会对options进行扩展
     callHook(vm, "beforeCreate")
@@ -14,11 +14,11 @@ export function initMixin(Vue){ //表示在vue的基础上做一次混合操作
     callHook(vm, "created")
     if (vm.$options.el) {
       // 将数据挂载到这个模板上
-      vm.$mount(vm.$options.el )
+      vm.$mount(vm.$options.el)
     }
-  } 
-  
-  Vue.prototype.$mount = function(el) {
+  }
+
+  Vue.prototype.$mount = function (el) {
     const vm = this;
     const options = vm.$options;
     el = document.querySelector(el);
@@ -28,9 +28,10 @@ export function initMixin(Vue){ //表示在vue的基础上做一次混合操作
       let template = options.template
       if (!template && el) { //用户也没有传递template 就取el的内容作为模板
         template = el.outerHTML
-        let render =  compileToFunction(template)
-        options.render = render
+
       }
+      let render = compileToFunction(template)
+      options.render = render
     }
     // options.render 就是渲染函数  调用render方法  渲染成真实dom 替换掉页面的内容
 
