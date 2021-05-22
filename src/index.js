@@ -22,21 +22,33 @@ initGlobalApi(Vue)
 import { compileToFunction } from "./compiler/index";
 import { createElm, patch } from "./vdom/patch";
 // diff 核心
-let oldTemplate = `<div style="color:red">{{message}}</div>`
+let oldTemplate = `<div a=1 style="color:red;background:black">
+<li>A</li>
+<li a=1>B</li>
+<li>C</li>
+<li>D</li>
+</div>`
 
-let vm1 = new Vue({data:{message:'hello world'}})
+let vm1 = new Vue({ data: { message: 'hello world' } })
 const render1 = compileToFunction(oldTemplate)
 const oldVnode = render1.call(vm1)  //虚拟dom
 document.body.appendChild(createElm(oldVnode))
 
-let newTemplate = `<div style="color:blue">{{message}}</div>`
+let newTemplate = `<div b=2 style="color:blue">
+<li>A</li>
+<li>D</li>
+<li>C</li>
+<li>D</li>
+</div>`
 
-let vm2 = new Vue({data:{message:'xzp'}})
+let vm2 = new Vue({ data: { message: 'xzp' } })
 const render2 = compileToFunction(newTemplate)
 const newVnode = render2.call(vm2)  //虚拟dom
 //根据新的虚拟节点更新老的节点，老的能复用尽量复用
 
-patch(oldVnode, newVnode)
+setTimeout(() => {
+    patch(oldVnode, newVnode)
+}, 2000)
 
 
 
