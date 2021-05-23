@@ -24,8 +24,22 @@
     <!-- <div id="app" a=1 style="color: red;background:plum;">
         <my-button></my-button>
     </div> -->
+    <div id="app">
+        <li>{{name}}</li>
+    </div>
     <script src="./dist/vue.js"></script>
     <script>
+        let vm = new Vue({
+            el:"#app",
+            data() {
+                return {
+                    name: 'zf',
+                }
+            },
+        })
+        setTimeout(() => {
+            vm.name = 'Xzp'
+        }, 2000)
         // Vue.mixin({
         //     beforeCreate(){
         //         console.log("beforeCreate111");

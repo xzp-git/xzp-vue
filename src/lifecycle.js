@@ -6,7 +6,14 @@ export function lifecycleMixin(Vue) {
     Vue.prototype._update = function (vnode) {
         // 既有初始化 又有更新
         const vm = this
-        vm.$el = patch(vm.$el, vnode)
+        const preVnode = vm._vnode;//表示当前的虚拟节点保存起来
+        if (!preVnode) {//初次渲染
+            vm.$el = patch(vm.$el, vnode)
+            
+        }else{
+            vm.$el = patch(preVnode, vnode)
+        }
+        vm._vnode = vnode
   
     }
 

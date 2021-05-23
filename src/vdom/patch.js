@@ -17,7 +17,6 @@ export function patch(oldVnode, vnode) {
 
         return elm
     } else {
-        console.log(oldVnode, vnode)
         // 如果标签的名称不一样 直接删掉老的 换成新的
         if (oldVnode.tag !== vnode.tag) {
             // 可以通过vnode.el属性 获取现在真实的dom元素
@@ -53,6 +52,7 @@ export function patch(oldVnode, vnode) {
             el.innerHTML = ``
         }
 
+        return el
 
         // 双方都有
     }
@@ -68,8 +68,23 @@ function patchChildren(el, oldChildren, newChildren) {
     let newStartVnode = newChildren[0]
     let newEndIndex = newChildren.length - 1
     let newEndVnode = newChildren[newEndIndex]
-
+    const makeIndexKey = (children) => {
+        return  children.reduce((memo, current,index) => {
+            if (current.key) {
+                memo[current.key] = index
+            }
+            return memo
+        },{})
+    } 
+    const keysMap = makeIndexKey(oldChildren)
     while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
+        // 优化了向后添加  向前添加  尾巴移动到头部  头部移动到尾部  反转
+        if (!oldStartVnode) { //已经被移动走了
+            oldStartVnode = oldChildren[++oldStartIndex]
+        }else if (!oldEndVnode) {
+            oldEndVnode = oldChildren[--oldEndIndex]
+        }
+
         // 同时循环新的节点和老的节点 有一方循环完毕就结束
         if (isSameVnode(oldStartVnode, newStartVnode)) { //头头一致 发下标签一致
             patch(oldStartVnode, newStartVnode)
@@ -92,7 +107,20 @@ function patchChildren(el, oldChildren, newChildren) {
             el.insertBefore(oldEndVnode.el,oldStartVnode.el)
             oldEndVnode = oldChildren[--oldEndIndex]
             newStartVnode = newChildren[++newStartIndex]
+       }else{
+           //乱序比对  核心diff
+           //1. 需要根据key' 和对应的索引将老的内容生成映射表
+           let moveIndex = keysMap[newStartVnode.key] //用新的去老的中查找
+           if (moveIndex == undefined) { //如果不能服用直接创建新的插入到老的节点开头处
+               el.insertBefore(createElm(newStartVnode),oldStartVnode.el)
+           } else{
+               let moveNode = oldChildren[moveIndex]
+               oldChildren[moveIndex] = null  //此节点已经被移动走了
+               el.insertBefore(moveNode.el, oldStartVnode.el)
+               patch(moveNode,newStartVnode) //比较两个节点的属性
+           }
 
+           newStartVnode = newChildren[++newStartIndex]  
        }
        
     }
@@ -110,7 +138,8 @@ function patchChildren(el, oldChildren, newChildren) {
     }
     if (oldStartIndex <= oldEndIndex) {
         for (let i = newStartIndex; i <= oldEndIndex; i++) {
-            el.removeChild(oldChildren[i].el)
+            //如果老的多将老节点删除 但是可能里面有null的情况
+            if (oldChildren[i] !== null) el.removeChild(oldChildren[i].el)
 
         }
     }
@@ -118,8 +147,8 @@ function patchChildren(el, oldChildren, newChildren) {
 
 
 }
-function isSameVnode(oldVnoe, newVnode) {
-    return (oldVnode.tag == newVnode.tag) && (oldVnoe.key == newVnode.key)
+function isSameVnode(oldVnode, newVnode) {
+    return (oldVnode.tag == newVnode.tag) && (oldVnode.key == newVnode.key)
 }
 function patchProps(vnode, oldProps = {}) { //初次渲染调用此方法，后续更新也可以调用此方法
     let newProps = vnode.data || {}
