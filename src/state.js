@@ -24,7 +24,6 @@ export function initState(vm){
     if(opts.watch){  //初始化watch
         initWatch(vm, opts.watch)
     }
-
 }
 
 function proxy(vm, source, key) {

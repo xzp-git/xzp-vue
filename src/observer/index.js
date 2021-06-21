@@ -30,18 +30,23 @@ class Observer{
         }
         
     }
+
     observeArray(data){ //对我们数组的数组 和数组中的对象再次劫持 递归
         data.forEach( item => observe(item))
         // 如果数组里放的是对象 也做了观测  
     }
+    
     walk (data){
+
         Object.keys(data).forEach(key => {
             defineReactive(data, key, data[key])
         })
+
     }
 }
 
 function dependArray(value) {
+
     for (let i = 0; i < value.length; i++) {
         let current = value[i];
         current.__ob__ && current.__ob__.dep.depend();
@@ -50,12 +55,15 @@ function dependArray(value) {
             dependArray(current)
         }
     }
+
 }
+
 // vue2会对对象进行遍历，将每个属性用defineProperty 重新定义 性能差
 function defineReactive (data,key,value) {
     let childOb =  observe(value)  //本身用户默认值是对象套对象
     let dep = new Dep()  //每个属性都有一个dep
     Object.defineProperty(data, key, {
+
         get(){
             //  取值时我们希望吧dep  与 watcher  对应起来
             if (Dep.target) { //此值是在模板中取值的
@@ -70,6 +78,7 @@ function defineReactive (data,key,value) {
             }
             return value
         },
+
         set(newV){
             if(newV !== value){
                 observe(newV)  //如果用户赋值一个新对象，需要将这个对象进行劫持
@@ -77,6 +86,7 @@ function defineReactive (data,key,value) {
                 dep.notify()
             }
         }
+        
     })
 }
 

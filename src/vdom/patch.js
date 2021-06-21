@@ -31,12 +31,12 @@ export function patch(oldVnode, vnode) {
                 return el.textContent = vnode.text
             }
         }
-        // 如果标签一样比较属性
+        // 如果标签一样比较属性`/7
         let oldProps = oldVnode.data
         patchProps(vnode, oldProps)
         // 属性可能有删除的情况 
 
-        //一方有儿子， 一方没儿子
+        
         let oldChildren = oldVnode.children || {}
         let newChildren = vnode.children || {}
 
@@ -48,6 +48,7 @@ export function patch(oldVnode, vnode) {
                 el.appendChild(child)
 
             }
+         //一方有儿子， 一方没儿子   
         } else if (oldChildren.length > 0) {
             el.innerHTML = ``
         }
@@ -89,7 +90,7 @@ function patchChildren(el, oldChildren, newChildren) {
         if (isSameVnode(oldStartVnode, newStartVnode)) { //头头一致 发下标签一致
             patch(oldStartVnode, newStartVnode)
             oldStartVnode = oldChildren[++oldStartIndex]
-            newStartIndex = newChildren[++newStartIndex]
+            newStartVnode = newChildren[++newStartIndex]
         } else if (isSameVnode(oldEndVnode, newEndVnode)) {
             patch(oldEndVnode, newEndVnode)
             oldEndVnode = oldChildren[--newEndIndex]
